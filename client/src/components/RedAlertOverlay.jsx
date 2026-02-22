@@ -7,10 +7,18 @@ const RedAlertOverlay = () => {
     useEffect(() => {
         const handleTrigger = () => {
             setActive(true);
-            setTimeout(() => setActive(false), 5000); // Stop after 5s
+            document.body.classList.add('animate-screen-shake');
+
+            setTimeout(() => {
+                setActive(false);
+                document.body.classList.remove('animate-screen-shake');
+            }, 5000); // Stop after 5s
         };
         window.addEventListener('TRIGGER_RED_ALERT', handleTrigger);
-        return () => window.removeEventListener('TRIGGER_RED_ALERT', handleTrigger);
+        return () => {
+            window.removeEventListener('TRIGGER_RED_ALERT', handleTrigger);
+            document.body.classList.remove('animate-screen-shake');
+        };
     }, []);
 
     return (

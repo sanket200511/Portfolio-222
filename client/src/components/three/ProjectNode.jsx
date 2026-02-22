@@ -21,13 +21,13 @@ const ProjectNode = ({ project, onClick }) => {
     });
 
     return (
-        <group position={project.position}>
-            <mesh
-                ref={meshRef}
-                onClick={(e) => { e.stopPropagation(); onClick(); }}
-                onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
-                onPointerOut={(e) => { e.stopPropagation(); setHovered(false); document.body.style.cursor = 'auto'; }}
-            >
+        <group
+            position={project.position}
+            onClick={(e) => { e.stopPropagation(); onClick(); }}
+            onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
+            onPointerOut={(e) => { e.stopPropagation(); setHovered(false); document.body.style.cursor = 'auto'; }}
+        >
+            <mesh ref={meshRef}>
                 <octahedronGeometry args={[0.5, 0]} />
                 <meshStandardMaterial
                     color={project.color}
@@ -37,8 +37,8 @@ const ProjectNode = ({ project, onClick }) => {
                 />
             </mesh>
 
-            {/* Node Label via HTML Overlay */}
-            <Html position={[0, -0.8, 0]} center zIndexRange={[100, 0]}>
+            {/* Node Label via HTML Overlay - Add pointerEvents none to wrapper to prevent raycast blocking */}
+            <Html position={[0, -0.8, 0]} center zIndexRange={[100, 0]} style={{ pointerEvents: 'none' }}>
                 <div
                     className={`transition-all duration-300 font-mono text-center pointer-events-none whitespace-nowrap
             ${hovered ? 'opacity-100 scale-110' : 'opacity-40 scale-100'}`}

@@ -65,14 +65,14 @@ const HeroHub = ({ onNodeClick }) => {
     }, [isMobile]);
 
     return (
-        <div id="hub" className="relative w-full h-screen bg-black overflow-hidden pt-20 md:pt-0">
-            {/* HUD Overlay */}
-            <div className="absolute top-20 md:top-8 left-4 md:left-8 z-10 pointer-events-none mix-blend-screen w-full pr-4">
-                <h1 className="text-primary font-mono text-xl md:text-3xl lg:text-4xl tracking-widest font-bold break-words">
-                    SANKET SHRIKANT KURVE
+        <div id="hub" className="relative w-full h-screen bg-black overflow-hidden pt-24 md:pt-0">
+            {/* HUD Overlay - Adjusted margin top to clear desktop Navbar */}
+            <div className="absolute top-24 md:top-28 left-4 md:left-8 z-10 pointer-events-none mix-blend-screen w-full pr-4 text-glow-extreme">
+                <h1 className="text-white font-black text-3xl md:text-5xl lg:text-7xl tracking-tighter break-words drop-shadow-[0_0_15px_rgba(0,240,255,0.8)] uppercase">
+                    SANKET <span className="text-primary">KURVE</span>
                 </h1>
-                <p className="text-secondary font-mono mt-2 tracking-widest text-xs md:text-sm lg:text-base">
-                    [FULL-STACK ENGINEER] / [SYSTEM ARCHITECT]
+                <p className="text-secondary font-mono mt-2 tracking-widest text-xs md:text-sm lg:text-base glitch-text-minor">
+                    [FULL-STACK ENGINEER] // [SYSTEM ARCHITECT]
                 </p>
             </div>
 
@@ -107,24 +107,24 @@ const HeroHub = ({ onNodeClick }) => {
 
                     {!isMobile && <CameraController />}
 
-                    {/* Epic Cyberpunk Post-Processing */}
-                    <EffectComposer multisampling={0} disableNormalPass>
+                    {/* Epic Cyberpunk Post-Processing - Removed disableNormalPass to re-enable 3D Clicks */}
+                    <EffectComposer multisampling={0}>
                         <Bloom
-                            intensity={1.5}
-                            luminanceThreshold={0.2}
+                            intensity={isMobile ? 1.0 : 2.5}
+                            luminanceThreshold={0.1}
                             luminanceSmoothing={0.9}
-                            kernelSize={KernelSize.LARGE}
+                            kernelSize={KernelSize.HUGE}
                         />
                         <ChromaticAberration
-                            offset={[0.002, 0.002]}
+                            offset={[0.003, 0.003]}
                             blendFunction={BlendFunction.NORMAL}
                         />
-                        <Noise opacity={0.05} />
-                        {/* Short random glitches to make it feel alive */}
+                        <Noise opacity={0.08} />
+                        {/* More aggressive glitch on Desktop */}
                         <Glitch
-                            delay={[2, 10]}
-                            duration={[0.1, 0.3]}
-                            strength={[0.01, 0.05]}
+                            delay={[1.5, 5]}
+                            duration={[0.1, 0.4]}
+                            strength={[0.02, 0.1]}
                             active
                         />
                     </EffectComposer>

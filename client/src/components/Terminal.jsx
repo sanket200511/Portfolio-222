@@ -12,10 +12,14 @@ const Terminal = () => {
     const inputRef = useRef(null);
     const idleTimerRef = useRef(null);
 
-    // Auto-scroll to bottom of terminal
+    const terminalBodyRef = useRef(null);
+
+    // Auto-scroll inside the terminal body purely
     useEffect(() => {
-        commandEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }, [history, input]);
+        if (terminalBodyRef.current) {
+            terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+        }
+    }, [history, input, isGhostTyping]);
 
     const resetIdleTimer = () => {
         if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
@@ -142,7 +146,7 @@ const Terminal = () => {
     };
 
     return (
-        <div className="bg-black/80 backdrop-blur-md rounded border border-gray-800 shadow-2xl overflow-hidden font-mono text-xs md:text-sm h-[400px] flex flex-col relative w-full">
+        <div className={`terminal-container bg-black/80 backdrop-blur-md rounded border border-gray-800 shadow-[0_0_40px_rgba(0,240,255,0.1)] overflow-hidden font-mono text-xs md:text-sm h-[400px] flex flex-col relative w-full transition-shadow duration-500 hover:shadow-[0_0_60px_rgba(255,0,85,0.2)]`}>
             {/* Terminal Header */}
             <div className="bg-gray-900 border-b border-gray-800 flex items-center px-4 py-2 select-none">
                 <div className="flex gap-2">
@@ -154,13 +158,16 @@ const Terminal = () => {
             </div>
 
             {/* Terminal Body */}
-            <div className="p-4 overflow-y-auto flex-grow text-gray-300">
+            <div
+                ref={terminalBodyRef}
+                className="p-4 overflow-y-auto flex-grow text-gray-300 custom-scrollbar"
+            >
                 {history.map((line, idx) => (
                     <div
                         key={idx}
-                        className={`mb-2 whitespace-pre-wrap ${line.type === 'error' ? 'text-red-400' :
+                        className={`mb-2 whitespace-pre-wrap ${line.type === 'error' ? 'text-red-400 font-bold glitch-text-minor' :
                             line.type === 'system' ? 'text-gray-500' :
-                                line.type === 'command' ? 'text-white' : 'text-secondary'
+                                line.type === 'command' ? 'text-white' : 'text-[#00f0ff] drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]'
                             }`}
                     >
                         {line.output}
@@ -169,7 +176,7 @@ const Terminal = () => {
 
                 {/* Input Line */}
                 <div className="flex items-center text-primary mt-2">
-                    <span className="mr-2 whitespace-nowrap">guest@sentinel:~$</span>
+                    <span className="mr-2 whitespace-nowrap text-[#ffaa00]">guest@sentinel:~$</span>
                     <input
                         type="text"
                         ref={inputRef}
@@ -181,13 +188,12 @@ const Terminal = () => {
                             }
                         }}
                         onKeyDown={handleCommand}
-                        className="bg-transparent border-none outline-none flex-grow text-primary placeholder-gray-700 w-full"
+                        className="bg-transparent border-none outline-none flex-grow text-white font-bold tracking-widest placeholder-gray-700 w-full drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
                         autoFocus
                         spellCheck="false"
                         autoComplete="off"
                     />
                 </div>
-                <div ref={commandEndRef} />
             </div>
 
             {/* Overlay Scanline for terminal specifically */}
