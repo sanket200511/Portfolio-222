@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0a0a0f;
+  --color-primary: #00f0ff;
+  --color-secondary: #00ff88;
+  --color-warning: #ffaa00;
+  --color-surface: rgba(255, 255, 255, 0.05);
+
+  --font-mono: "Share Tech Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+
+  --animate-scan-line: scanline 8s linear infinite;
+  --animate-pulse-glow: pulseglow 2s ease-in-out infinite alternate;
+
+  @keyframes scanline {
+    0% {
+      transform: translateY(-100%)
+    }
+
+    100% {
+      transform: translateY(100vh)
+    }
+  }
+
+  @keyframes pulseglow {
+    0% {
+      opacity: 0.5;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.2)
+    }
+
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6)
+    }
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: #e5e7eb;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Utilities */
+.glass-panel {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+}
+
+.scanline-effect {
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0) 50%,
+      rgba(0, 0, 0, 0.1) 50%,
+      rgba(0, 0, 0, 0.1));
+  background-size: 100% 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  mix-blend-mode: overlay;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00f0ff40;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ff80;
+}
