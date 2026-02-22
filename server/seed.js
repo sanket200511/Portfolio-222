@@ -60,7 +60,6 @@ const projects = [
 const skills = [
     { name: 'React.js', category: 'Frontend', proficiency: 95, order: 1 },
     { name: 'Node.js', category: 'Backend', proficiency: 90, order: 2 },
-    { name: 'Three.js / WebGL', category: 'Frontend', proficiency: 85, order: 3 },
     { name: 'MongoDB', category: 'Database', proficiency: 88, order: 4 },
     { name: 'Python', category: 'Language', proficiency: 92, order: 5 },
     { name: 'FastAPI', category: 'Backend', proficiency: 85, order: 6 },
