@@ -22,26 +22,48 @@ const HeroHub = ({ onNodeClick }) => {
 
         const fetchGithubData = async () => {
             try {
-                // Fetch live public repositories for the user
-                const res = await axios.get('https://api.github.com/users/sanket200511/repos?sort=updated&per_page=6');
+                // Fetch up to 100 repositories to ensure we catch the specific ones
+                const res = await axios.get('https://api.github.com/users/sanket200511/repos?sort=updated&per_page=100');
+
+                // Explicitly allowed project keywords
+                const allowedKeywords = ['citywatch', 'shieldcall', 'crisisforge', 'medical', 'football'];
+
+                // Filter out forks and ONLY include allowed projects
+                const filteredRepos = res.data.filter(repo => {
+                    if (repo.fork) return false; // Exclude forks
+
+                    const name = repo.name.toLowerCase();
+                    return allowedKeywords.some(keyword => name.includes(keyword));
+                }).slice(0, 6); // Take up to 6
 
                 // Colors to randomly assign to GitHub projects
                 const cyberColors = ['#ff0055', '#00f0ff', '#ffaa00', '#00ff88', '#b000ff', '#ffffff'];
 
                 // Map the GitHub data into the format our 3D nodes expect
-                const mappedProjects = res.data.map((repo, idx) => {
+                const mappedProjects = filteredRepos.map((repo, idx) => {
                     // Generate a random orbit position (avoiding dead center)
-                    const angle = (idx / res.data.length) * Math.PI * 2;
+                    const angle = (idx / filteredRepos.length) * Math.PI * 2;
                     const radius = isMobile ? 3 : 5 + Math.random() * 2;
                     const x = Math.cos(angle) * radius;
                     const z = Math.sin(angle) * radius;
                     const y = Math.random() * 3;
 
+                    let customDesc = repo.description;
+                    if (!customDesc || customDesc === 'No description provided.') {
+                        const nameLower = repo.name.toLowerCase();
+                        if (nameLower.includes('shieldcall')) customDesc = 'AI-powered emergency response and threat mitigation system.';
+                        else if (nameLower.includes('citywatch')) customDesc = 'Real-time urban threat detection and AI analytics platform.';
+                        else if (nameLower.includes('crisisforge')) customDesc = 'Advanced disaster relief and tactical coordination matrix.';
+                        else if (nameLower.includes('football')) customDesc = 'Machine learning model predicting football transfer market valuations.';
+                        else if (nameLower.includes('medical')) customDesc = 'Predictive medical diagnosis AI leveraging neural networks.';
+                        else customDesc = 'Encrypted data node containing classified source code algorithms.';
+                    }
+
                     return {
                         id: repo.id.toString(),
                         title: repo.name,
                         category: repo.language || 'Code',
-                        description: repo.description || 'No description provided.',
+                        description: customDesc,
                         githubUrl: repo.html_url,
                         color: cyberColors[idx % cyberColors.length],
                         position: [x, y, z]
@@ -86,9 +108,9 @@ const HeroHub = ({ onNodeClick }) => {
             >
                 <color attach="background" args={['#050508']} />
 
-                <ambientLight intensity={0.2} />
-                <directionalLight position={[10, 10, 5]} intensity={1} color="#00f0ff" />
-                <pointLight position={[-10, -10, -10]} intensity={0.5} color="#ff0055" />
+                <ambientLight intensity={0.1} />
+                <directionalLight position={[10, 10, 5]} intensity={0.4} color="#00f0ff" />
+                <pointLight position={[-10, -10, -10]} intensity={0.2} color="#ff0055" />
 
                 <Suspense fallback={null}>
                     <GridPlatform />
@@ -110,10 +132,10 @@ const HeroHub = ({ onNodeClick }) => {
                     {/* Epic Cyberpunk Post-Processing - Removed disableNormalPass to re-enable 3D Clicks */}
                     <EffectComposer multisampling={0}>
                         <Bloom
-                            intensity={isMobile ? 1.0 : 2.5}
-                            luminanceThreshold={0.1}
+                            intensity={0.2}
+                            luminanceThreshold={0.8}
                             luminanceSmoothing={0.9}
-                            kernelSize={KernelSize.HUGE}
+                            kernelSize={KernelSize.SMALL}
                         />
                         <ChromaticAberration
                             offset={[0.003, 0.003]}

@@ -24,7 +24,7 @@ const projects = [
         subtitle: 'Urban Surveillance and Monitoring',
         description: 'A comprehensive monitoring system tailored for urban environments. It utilizes IoT sensors and edge computing to track and report city metrics anomalies.',
         techStack: ['Node.js', 'React', 'MongoDB', 'IoT', 'MQTT'],
-        category: 'IoT',
+        category: 'AI/ML',
         threatLevel: 'MODERATE',
         githubUrl: 'https://github.com/sanket200511/CityWatch',
         color: '#00f0ff',

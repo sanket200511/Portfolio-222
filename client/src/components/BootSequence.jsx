@@ -6,7 +6,7 @@ const BootSequence = ({ onComplete }) => {
     const [phase, setPhase] = useState(0);
 
     // Line 1
-    const line1 = useTypewriter('[INITIALIZING SENTINEL GRID v3.7.1...]', 40, 500);
+    const line1 = useTypewriter('[ INITIALIZING SENTINEL GRAPHICS v3.7.1... ]', 40, 500);
 
     // Sequence delays
     useEffect(() => {
