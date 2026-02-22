@@ -9,12 +9,13 @@ const Terminal = () => {
     const [input, setInput] = useState('');
     const [isGhostTyping, setIsGhostTyping] = useState(false);
     const commandEndRef = useRef(null);
+    const inputRef = useRef(null);
     const idleTimerRef = useRef(null);
 
     // Auto-scroll to bottom of terminal
     useEffect(() => {
-        commandEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [history]);
+        commandEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, [history, input]);
 
     const resetIdleTimer = () => {
         if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
@@ -133,6 +134,8 @@ const Terminal = () => {
                 { type, output }
             ]);
             setInput('');
+            // Keep focus on input after command
+            setTimeout(() => inputRef.current?.focus(), 10);
         }
     };
 
@@ -167,6 +170,7 @@ const Terminal = () => {
                     <span className="mr-2 whitespace-nowrap">guest@sentinel:~$</span>
                     <input
                         type="text"
+                        ref={inputRef}
                         value={input}
                         onChange={(e) => {
                             setInput(e.target.value);

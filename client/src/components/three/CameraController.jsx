@@ -3,26 +3,20 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const CameraController = () => {
-    const targetPosition = useRef(new THREE.Vector3(0, 5, 12)); // Base camera position
-    const currentPosition = useRef(new THREE.Vector3(0, 5, 12));
+    const parallaxOffset = useRef(new THREE.Vector3(0, 0, 0));
 
     useFrame((state) => {
-        // Calculate parallax target based on mouse pointer (-1 to +1)
-        // Multipliers define how far the camera swings
-        const parallaxX = state.pointer.x * 3;
-        const parallaxY = state.pointer.y * 3; // Inverted mostly feels better, but we leave it direct here
+        // Calculate very subtle parallax target
+        const targetX = state.pointer.x * 0.5;
+        const targetY = state.pointer.y * 0.5;
 
-        targetPosition.current.set(
-            parallaxX,
-            5 + parallaxY,
-            12
-        );
+        // Smoothly move the parallax offset
+        parallaxOffset.current.x = THREE.MathUtils.lerp(parallaxOffset.current.x, targetX, 0.05);
+        parallaxOffset.current.y = THREE.MathUtils.lerp(parallaxOffset.current.y, targetY, 0.05);
 
-        // Exponential smoothing (lerp) for buttery smooth camera movement
-        currentPosition.current.lerp(targetPosition.current, 0.05);
-
-        // Apply position
-        state.camera.position.copy(currentPosition.current);
+        // Apply slight position nudge to the camera (additive, so it doesn't break OrbitControls)
+        state.camera.position.x += (parallaxOffset.current.x - state.camera.position.x * 0.02) * 0.1;
+        state.camera.position.y += (parallaxOffset.current.y - state.camera.position.y * 0.02) * 0.1;
 
         // Always look at the center of the grid (0,0,0) with a slight offset
         state.camera.lookAt(0, 1, 0);

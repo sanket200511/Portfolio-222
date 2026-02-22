@@ -59,7 +59,7 @@ const HeroHub = ({ onNodeClick }) => {
                     <CameraController />
 
                     {/* Epic Cyberpunk Post-Processing */}
-                    <EffectComposer multisampling={0}>
+                    <EffectComposer multisampling={0} disableNormalPass>
                         <Bloom
                             intensity={1.5}
                             luminanceThreshold={0.2}

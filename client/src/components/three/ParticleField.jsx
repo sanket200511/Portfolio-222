@@ -14,9 +14,10 @@ const ParticleField = () => {
         const vel = new Float32Array(count * 3);
         const orig = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
-            const x = (Math.random() - 0.5) * 40;
-            const y = (Math.random() - 0.5) * 40;
-            const z = (Math.random() - 0.5) * 40;
+            // Widen spread, push deep into background
+            const x = (Math.random() - 0.5) * 80;
+            const y = (Math.random() - 0.5) * 80;
+            const z = (Math.random() - 0.5) * 40 - 20;
             pos[i * 3] = x;
             pos[i * 3 + 1] = y;
             pos[i * 3 + 2] = z;

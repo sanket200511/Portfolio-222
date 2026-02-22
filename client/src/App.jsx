@@ -13,6 +13,7 @@ import AdminDashboard from './components/AdminDashboard';
 import CustomCursor from './components/CustomCursor';
 import MatrixOverlay from './components/MatrixOverlay';
 import RedAlertOverlay from './components/RedAlertOverlay';
+import MeltdownModal from './components/MeltdownModal';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
@@ -32,6 +33,7 @@ function App() {
       <CustomCursor />
       <MatrixOverlay />
       <RedAlertOverlay />
+      <MeltdownModal />
       {/* Global Scanline Effect */}
       <div className="pointer-events-none fixed inset-0 z-50 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20 Mix-blend-overlay"></div>
 
