@@ -2,14 +2,12 @@ import { motion } from 'framer-motion';
 
 // Mock data until API is wired up
 const fallbackSkills = [
-    { _id: '1', name: 'React.js', category: 'Frontend', proficiency: 95 },
-    { _id: '2', name: 'Three.js', category: 'Frontend', proficiency: 85 },
-    { _id: '3', name: 'TailwindCSS', category: 'Frontend', proficiency: 90 },
-    { _id: '4', name: 'Node.js', category: 'Backend', proficiency: 92 },
-    { _id: '5', name: 'Express', category: 'Backend', proficiency: 90 },
-    { _id: '6', name: 'Python', category: 'Language', proficiency: 88 },
-    { _id: '7', name: 'MongoDB', category: 'Database', proficiency: 85 },
-    { _id: '8', name: 'Cyber Defense', category: 'Tool', proficiency: 80 }
+    { _id: '1', name: 'React / Vite', category: 'Frontend', proficiency: 90 },
+    { _id: '3', name: 'Node.js', category: 'Backend', proficiency: 80 },
+    { _id: '4', name: 'Python / ML', category: 'Backend', proficiency: 75 },
+    { _id: '5', name: 'MongoDB', category: 'Database', proficiency: 85 },
+    { _id: '6', name: 'TensorFlow', category: 'Tool', proficiency: 70 },
+    { _id: '7', name: 'Docker / CI', category: 'Tool', proficiency: 85 }
 ];
 
 const SkillsArsenal = () => {

@@ -29,7 +29,7 @@ const ContactSection = () => {
                         <button
                             className="w-full sm:w-auto bg-red-900/30 border border-red-500 text-red-500 px-6 md:px-8 py-3 md:py-4 font-bold tracking-widest text-sm md:text-base uppercase hover:bg-red-500 hover:text-black transition-colors cyber-glitch-hover"
                             onMouseEnter={() => soundManager.playHover()}
-                            onClick={() => window.location.href = 'mailto:contact@sanket.com'}
+                            onClick={() => window.location.href = 'mailto:sanketkurve.2005@gmail.com'}
                         >
                             INITIATE PING
                         </button>
