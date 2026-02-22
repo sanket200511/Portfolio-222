@@ -1,10 +1,13 @@
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
+import { EffectComposer, Bloom, ChromaticAberration, Noise, Glitch } from '@react-three/postprocessing';
+import { BlurPass, Resizer, KernelSize, BlendFunction } from 'postprocessing';
 import GridPlatform from './three/GridPlatform';
 import ParticleField from './three/ParticleField';
 import CameraController from './three/CameraController';
 import ProjectNode from './three/ProjectNode';
+import DataCore from './three/DataCore';
 
 // Placeholder data for testing 3D nodes before API integration
 const fallbackProjects = [
@@ -41,6 +44,7 @@ const HeroHub = ({ onNodeClick }) => {
                 <Suspense fallback={null}>
                     <GridPlatform />
                     <ParticleField />
+                    <DataCore />
 
                     <group position={[0, -1, 0]}>
                         {fallbackProjects.map((proj) => (
@@ -53,6 +57,28 @@ const HeroHub = ({ onNodeClick }) => {
                     </group>
 
                     <CameraController />
+
+                    {/* Epic Cyberpunk Post-Processing */}
+                    <EffectComposer multisampling={0}>
+                        <Bloom
+                            intensity={1.5}
+                            luminanceThreshold={0.2}
+                            luminanceSmoothing={0.9}
+                            kernelSize={KernelSize.LARGE}
+                        />
+                        <ChromaticAberration
+                            offset={[0.002, 0.002]}
+                            blendFunction={BlendFunction.NORMAL}
+                        />
+                        <Noise opacity={0.05} />
+                        {/* Short random glitches to make it feel alive */}
+                        <Glitch
+                            delay={[2, 10]}
+                            duration={[0.1, 0.3]}
+                            strength={[0.01, 0.05]}
+                            active
+                        />
+                    </EffectComposer>
                 </Suspense>
 
                 <OrbitControls

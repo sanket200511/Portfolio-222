@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { soundManager } from '../utils/audioEngine';
 
 const Terminal = () => {
     const [history, setHistory] = useState([
@@ -29,24 +30,18 @@ const Terminal = () => {
   projects --list   - Show project array
   skills --list     - Ping skill database
   whoami            - Display current user context
+  matrix            - Enter the construct
+  sudo rm -rf /     - System wipe (DANGEROUS)
   clear             - Clear terminal window`;
                     break;
                 case 'cat profile.txt':
                     output = `"I don't just write code. I engineer ecosystems. From back-end logic to front-end magic. The full-stack advantage." - Sanket Shrikant Kurve`;
                     break;
                 case 'projects --list':
-                    output = `[1] ShieldCall (AI/ML)
-[2] CityWatch (IoT)
-[3] CrisisForge (Robotics)
-[4] Hajeeri (Full-Stack)`;
+                    output = `[1] ShieldCall (AI/ML)\n[2] CityWatch (IoT)\n[3] CrisisForge (Robotics)\n[4] Hajeeri (Full-Stack)`;
                     break;
                 case 'skills --list':
-                    output = `[FETCHING DATA...]
-> JavaScript/TypeScript
-> React, Node.js, Express
-> MongoDB, SQL
-> Python, FastAPI
-> Three.js, WebGL`;
+                    output = `[FETCHING DATA...]\n> JavaScript/TypeScript\n> React, Node.js, Express\n> MongoDB, SQL\n> Python, FastAPI\n> Three.js, WebGL`;
                     break;
                 case 'whoami':
                     output = `guest_user_9921`;
@@ -55,6 +50,15 @@ const Terminal = () => {
                     setHistory([]);
                     setInput('');
                     return;
+                case 'matrix':
+                    output = `Wake up, Neo...`;
+                    window.dispatchEvent(new CustomEvent('TRIGGER_MATRIX'));
+                    break;
+                case 'sudo rm -rf /':
+                    output = `UNAUTHORIZED ROOT ACCESS DETECTED. INITIATING COUNTERMEASURES.`;
+                    soundManager.playAlert();
+                    window.dispatchEvent(new CustomEvent('TRIGGER_RED_ALERT'));
+                    break;
                 default:
                     output = `Command not found: ${cmd}. Type "help" for a list of commands.`;
                     type = 'error';
@@ -87,8 +91,8 @@ const Terminal = () => {
                     <div
                         key={idx}
                         className={`mb-2 whitespace-pre-wrap ${line.type === 'error' ? 'text-red-400' :
-                                line.type === 'system' ? 'text-gray-500' :
-                                    line.type === 'command' ? 'text-white' : 'text-secondary'
+                            line.type === 'system' ? 'text-gray-500' :
+                                line.type === 'command' ? 'text-white' : 'text-secondary'
                             }`}
                     >
                         {line.output}
@@ -101,9 +105,14 @@ const Terminal = () => {
                     <input
                         type="text"
                         value={input}
-                        onChange={(e) => setInput(e.target.value)}
+                        onChange={(e) => {
+                            setInput(e.target.value);
+                            if (e.target.value.length > input.length) {
+                                soundManager.playKeyStroke();
+                            }
+                        }}
                         onKeyDown={handleCommand}
-                        className="bg-transparent border-none outline-none flex-grow text-primary placeholder-gray-700"
+                        className="bg-transparent border-none outline-none flex-grow text-primary placeholder-gray-700 w-full"
                         autoFocus
                         spellCheck="false"
                         autoComplete="off"

@@ -10,6 +10,9 @@ import AboutSection from './components/AboutSection';
 import SkillsArsenal from './components/SkillsArsenal';
 import ContactSection from './components/ContactSection';
 import AdminDashboard from './components/AdminDashboard';
+import CustomCursor from './components/CustomCursor';
+import MatrixOverlay from './components/MatrixOverlay';
+import RedAlertOverlay from './components/RedAlertOverlay';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
@@ -26,6 +29,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-gray-200 selection:bg-primary/30 selection:text-primary overflow-x-hidden relative font-sans">
+      <CustomCursor />
+      <MatrixOverlay />
+      <RedAlertOverlay />
       {/* Global Scanline Effect */}
       <div className="pointer-events-none fixed inset-0 z-50 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20 Mix-blend-overlay"></div>
 

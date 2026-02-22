@@ -44,6 +44,7 @@ body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  cursor: none;
 }
 
 /* Utilities */
@@ -95,4 +96,11 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #00f0ff80;
+}
+
+/* Make links and buttons inherit cursor none */
+a,
+button,
+input {
+  cursor: none !important;
 }
