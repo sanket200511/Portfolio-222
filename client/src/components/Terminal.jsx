@@ -86,46 +86,48 @@ const Terminal = () => {
 
             if (!cmd) return;
 
-            switch (cmd) {
-                case 'help':
-                    output = `Available commands:
-  help              - Show this menu
-  cat profile.txt   - Display bio
-  projects --list   - Show project array
-  skills --list     - Ping skill database
-  whoami            - Display current user context
-  matrix            - Enter the construct
-  sudo rm -rf /     - System wipe (DANGEROUS)
-  clear             - Clear terminal window`;
-                    break;
-                case 'cat profile.txt':
-                    output = `"I don't just write code. I engineer ecosystems. From back-end logic to front-end magic. The full-stack advantage." - Sanket Shrikant Kurve`;
-                    break;
-                case 'projects --list':
-                    output = `[1] ShieldCall (AI/ML)\n[2] CityWatch (IoT)\n[3] CrisisForge (Robotics)\n[4] Hajeeri (Full-Stack)`;
-                    break;
-                case 'skills --list':
-                    output = `[FETCHING DATA...]\n> JavaScript/TypeScript\n> React, Node.js, Express\n> MongoDB, SQL\n> Python, FastAPI\n> Three.js, WebGL`;
-                    break;
-                case 'whoami':
-                    output = `guest_user_9921`;
-                    break;
-                case 'clear':
-                    setHistory([]);
-                    setInput('');
-                    return;
-                case 'matrix':
-                    output = `Wake up, Neo...`;
-                    window.dispatchEvent(new CustomEvent('TRIGGER_MATRIX'));
-                    break;
-                case 'sudo rm -rf /':
-                    output = `UNAUTHORIZED ROOT ACCESS DETECTED. INITIATING COUNTERMEASURES.`;
-                    soundManager.playAlert();
-                    window.dispatchEvent(new CustomEvent('TRIGGER_RED_ALERT'));
-                    break;
-                default:
-                    output = `Command not found: ${cmd}. Type "help" for a list of commands.`;
-                    type = 'error';
+            // Handle Regex for sudo rm -rf variations
+            if (cmd.match(/^sudo rm -rf\s*\/?$/i)) {
+                output = `UNAUTHORIZED ROOT ACCESS DETECTED. INITIATING COUNTERMEASURES.`;
+                soundManager.playAlert();
+                window.dispatchEvent(new CustomEvent('TRIGGER_RED_ALERT'));
+            } else {
+                switch (cmd) {
+                    case 'help':
+                        output = `Available commands:
+      help              - Show this menu
+      cat profile.txt   - Display bio
+      projects --list   - Show project array
+      skills --list     - Ping skill database
+      whoami            - Display current user context
+      matrix            - Enter the construct
+      sudo rm -rf /     - System wipe (DANGEROUS)
+      clear             - Clear terminal window`;
+                        break;
+                    case 'cat profile.txt':
+                        output = `"I don't just write code. I engineer ecosystems. From back-end logic to front-end magic. The full-stack advantage." - Sanket Shrikant Kurve`;
+                        break;
+                    case 'projects --list':
+                        output = `[1] ShieldCall (AI/ML)\n[2] CityWatch (IoT)\n[3] CrisisForge (Robotics)\n[4] Hajeeri (Full-Stack)`;
+                        break;
+                    case 'skills --list':
+                        output = `[FETCHING DATA...]\n> JavaScript/TypeScript\n> React, Node.js, Express\n> MongoDB, SQL\n> Python, FastAPI\n> Three.js, WebGL`;
+                        break;
+                    case 'whoami':
+                        output = `guest_user_9921`;
+                        break;
+                    case 'clear':
+                        setHistory([]);
+                        setInput('');
+                        return;
+                    case 'matrix':
+                        output = `Wake up, Neo...`;
+                        window.dispatchEvent(new CustomEvent('TRIGGER_MATRIX'));
+                        break;
+                    default:
+                        output = `Command not found: ${cmd}. Type "help" for a list of commands.`;
+                        type = 'error';
+                }
             }
 
             setHistory(prev => [

@@ -27,21 +27,21 @@ const SkillsArsenal = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="mb-16"
+                    viewport={{ once: true, margin: "-50px" }}
+                    className="mb-12 md:mb-16"
                 >
                     <div className="inline-block border border-red-500/30 bg-red-500/10 text-red-400 px-3 py-1 text-xs font-mono tracking-widest mb-4">
             // WEAPONS_CACHE_FOUND
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-bold font-sans tracking-tight text-white">
+                    <h2 className="text-3xl md:text-5xl font-bold font-sans tracking-tight text-white mb-2 md:mb-4">
                         The Arsenal
                     </h2>
-                    <p className="mt-4 text-gray-400 font-mono text-sm max-w-xl">
+                    <p className="text-gray-400 font-mono text-xs md:text-sm max-w-xl">
                         A comprehensive overview of operational capabilities. Tools and technologies mastered to engineer scalable ecosystems and neutralize architectural threats.
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                     {fallbackSkills.map((skill, index) => (
                         <SkillBar key={skill._id} skill={skill} index={index} />
                     ))}
