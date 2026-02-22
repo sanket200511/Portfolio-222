@@ -1,57 +1,55 @@
+import React from 'react';
 import { motion } from 'framer-motion';
+import { soundManager } from '../utils/audioEngine'; // Ensure sound manager is imported
 
 const ContactSection = () => {
     return (
-        <section id="contact" className="min-h-[70vh] w-full bg-black relative flex flex-col justify-center py-24 border-t border-white/10 z-10 overflow-hidden">
-
-            {/* Background Warning Stripes */}
+        <section id="contact" className="py-24 relative z-10 bg-black border-t border-gray-800">
+            {/* Background cyber pattern */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 20px, #ffaa00 20px, #ffaa00 40px)' }}>
-            </div>
+                style={{ backgroundImage: 'repeating-linear-gradient(45deg, #00f0ff 25%, transparent 25%, transparent 75%, #00f0ff 75%, #00f0ff), repeating-linear-gradient(45deg, #00f0ff 25%, #000 25%, #000 75%, #00f0ff 75%, #00f0ff)', backgroundPosition: '0 0, 10px 10px', backgroundSize: '20px 20px' }}
+            ></div>
 
-            <div className="max-w-4xl mx-auto px-6 text-center w-full relative z-10">
+            <div className="max-w-6xl mx-auto px-6 relative">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.8 }}
+                    className="text-center"
                 >
-                    <div className="mb-4 text-warning font-mono tracking-[0.3em] font-bold text-sm animate-pulse">
-                        [ INCOMING TRANSMISSION ]
-                    </div>
-
-                    <h2 className="text-5xl md:text-7xl font-sans font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500 mb-8 uppercase">
+                    <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
                         Establish Connection
                     </h2>
-
-                    <p className="text-gray-400 font-mono mb-12 max-w-2xl mx-auto leading-relaxed">
-                        System architecture needs scaling? Threat vectors need neutralizing? Or perhaps you just want to collaborate on the next big disruption? Open a secure channel.
+                    <p className="text-gray-400 font-mono mb-12 max-w-2xl mx-auto">
+                        My comms node is currently open. Whether you have a secure contract or just want to ping my server, drop a message.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                        <a
-                            href="mailto:contact@sanket.com"
-                            className="bg-primary/20 border border-primary text-primary px-8 py-4 font-mono font-bold tracking-widest hover:bg-primary hover:text-black transition-all group relative overflow-hidden"
+                        <button
+                            className="bg-red-900/30 border border-red-500 text-red-500 px-8 py-4 font-bold tracking-widest uppercase hover:bg-red-500 hover:text-black transition-colors cyber-glitch-hover"
+                            onMouseEnter={() => soundManager.playHover()}
+                            onClick={() => window.location.href = 'mailto:contact@sanket.com'}
                         >
-                            <span className="relative z-10">INITIATE_PING</span>
-                        </a>
+                            INITIATE PING
+                        </button>
 
-                        <a
-                            href="https://github.com/sanket200511"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="bg-white/5 border border-white/20 text-white px-8 py-4 font-mono font-bold tracking-widest hover:bg-white hover:text-black transition-all"
+                        <button
+                            className="bg-transparent border border-gray-700 text-gray-400 px-8 py-4 font-bold tracking-widest uppercase hover:border-primary hover:text-primary transition-colors cyber-glitch-hover"
+                            onMouseEnter={() => soundManager.playHover()}
+                            onClick={() => window.open('https://github.com/sanket200511', '_blank')}
                         >
                             LOCATE DATA_REPO
-                        </a>
+                        </button>
                     </div>
                 </motion.div>
             </div>
 
-            {/* Quick Footer Component embedded */}
-            <div className="absolute bottom-4 left-0 w-full text-center font-mono text-[10px] text-gray-600 tracking-widest">
-                © {new Date().getFullYear()} SANKET SHRIKANT KURVE // SENTINEL GRID SECURE PROTOCOL // ALL DIRECTIVES ENFORCED.
-            </div>
+            <footer className="absolute bottom-0 w-full p-4 text-center border-t border-gray-900">
+                <p className="text-gray-600 font-mono text-[10px] tracking-[0.3em]">
+                    // SYSTEM AUTHOR: SANKET SHRIKANT KURVE // ALL PROTOCOLS SECURED // 2026 //
+                </p>
+            </footer>
         </section>
     );
 };

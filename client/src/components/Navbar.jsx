@@ -10,19 +10,19 @@ const Navbar = () => {
             <div className="flex gap-6 font-mono text-xs tracking-[0.2em]">
                 <NavLink
                     to="/"
-                    className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? 'text-primary' : 'text-gray-400'}`}
+                    className={({ isActive }) => `hover:text-primary transition-colors cyber-glitch-hover ${isActive ? 'text-primary' : 'text-gray-400'}`}
                 >
                     [HUB]
                 </NavLink>
                 <NavLink
                     to="/about"
-                    className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? 'text-primary' : 'text-gray-400'}`}
+                    className={({ isActive }) => `hover:text-primary transition-colors cyber-glitch-hover ${isActive ? 'text-primary' : 'text-gray-400'}`}
                 >
                     [ABOUT]
                 </NavLink>
                 <NavLink
                     to="/arsenal"
-                    className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? 'text-primary' : 'text-gray-400'}`}
+                    className={({ isActive }) => `hover:text-primary transition-colors cyber-glitch-hover ${isActive ? 'text-primary' : 'text-gray-400'}`}
                 >
                     [ARSENAL]
                 </NavLink>

@@ -7,14 +7,77 @@ const Terminal = () => {
         { type: 'system', output: 'Type "help" to see available commands.' }
     ]);
     const [input, setInput] = useState('');
+    const [isGhostTyping, setIsGhostTyping] = useState(false);
     const commandEndRef = useRef(null);
+    const idleTimerRef = useRef(null);
 
     // Auto-scroll to bottom of terminal
     useEffect(() => {
         commandEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [history]);
 
+    const resetIdleTimer = () => {
+        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+
+        idleTimerRef.current = setTimeout(() => {
+            triggerGhostAI();
+        }, 20000); // 20 seconds of idle = ghost triggers
+    };
+
+    useEffect(() => {
+        resetIdleTimer();
+        const handleInteraction = () => resetIdleTimer();
+        window.addEventListener('mousemove', handleInteraction);
+        window.addEventListener('keydown', handleInteraction);
+
+        return () => {
+            if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+            window.removeEventListener('mousemove', handleInteraction);
+            window.removeEventListener('keydown', handleInteraction);
+        };
+    }, []);
+
+    const triggerGhostAI = () => {
+        const messages = [
+            "Are you still there?",
+            "I see you inspecting the code.",
+            "The grid is absolute.",
+            "Sanket is watching."
+        ];
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        setIsGhostTyping(true);
+
+        let i = 0;
+        setInput('');
+
+        const typeChar = () => {
+            if (i < randomMsg.length) {
+                setInput((prev) => prev + randomMsg.charAt(i));
+                soundManager.playKeyStroke();
+                i++;
+                setTimeout(typeChar, 100);
+            } else {
+                setTimeout(() => {
+                    setHistory(prev => [
+                        ...prev,
+                        { type: 'command', output: `ghost@machine:~$ ${randomMsg}` },
+                        { type: 'error', output: `[CONNECTION INTERCEPTED]` }
+                    ]);
+                    setInput('');
+                    setIsGhostTyping(false);
+                    soundManager.playAlert();
+                }, 1000);
+            }
+        };
+        typeChar();
+    };
+
     const handleCommand = (e) => {
+        if (isGhostTyping) {
+            e.preventDefault();
+            return;
+        }
+
         if (e.key === 'Enter') {
             const cmd = input.trim().toLowerCase();
             let output = '';

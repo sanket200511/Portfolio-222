@@ -1,67 +1,102 @@
 import React, { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const ParticleField = ({ count = 500 }) => {
+const ParticleField = () => {
+    const count = 5000;
     const meshRef = useRef();
+    const { size, viewport } = useThree();
+    const aspect = size.width / viewport.width;
 
-    // Generate random positions and initial phases for particles
-    const [positions, phases] = useMemo(() => {
+    // Initialize particles with random positions
+    const { positions, velocities, originalPositions } = useMemo(() => {
         const pos = new Float32Array(count * 3);
-        const ph = new Float32Array(count);
+        const vel = new Float32Array(count * 3);
+        const orig = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
-            // Spread particles in a cylinder volume
-            const radius = 2 + Math.random() * 15;
-            const theta = Math.random() * 2 * Math.PI;
-            const y = (Math.random() - 0.5) * 10;
+            const x = (Math.random() - 0.5) * 40;
+            const y = (Math.random() - 0.5) * 40;
+            const z = (Math.random() - 0.5) * 40;
+            pos[i * 3] = x;
+            pos[i * 3 + 1] = y;
+            pos[i * 3 + 2] = z;
+            orig[i * 3] = x;
+            orig[i * 3 + 1] = y;
+            orig[i * 3 + 2] = z;
 
-            pos[i * 3] = radius * Math.cos(theta); // x
-            pos[i * 3 + 1] = y;                    // y
-            pos[i * 3 + 2] = radius * Math.sin(theta); // z
-
-            ph[i] = Math.random() * Math.PI * 2;
+            vel[i * 3] = (Math.random() - 0.5) * 0.05;
+            vel[i * 3 + 1] = (Math.random() - 0.5) * 0.05;
+            vel[i * 3 + 2] = (Math.random() - 0.5) * 0.05;
         }
-        return [pos, ph];
+        return { positions: pos, velocities: vel, originalPositions: orig };
     }, [count]);
 
+    const dummy = useMemo(() => new THREE.Object3D(), []);
+
     useFrame((state) => {
-        if (!meshRef.current) return;
-        const time = state.clock.getElapsedTime();
+        // Mouse position normalized (-1 to +1)
+        const mouseX = (state.pointer.x * viewport.width) / 2;
+        const mouseY = (state.pointer.y * viewport.height) / 2;
 
-        // Animate positions for subtle drift
-        const posAttribute = meshRef.current.geometry.attributes.position;
         for (let i = 0; i < count; i++) {
-            const idx = i * 3 + 1; // get Y coordinate
+            const i3 = i * 3;
 
-            // Floating up and down based on phase
-            const originalY = positions[idx];
-            posAttribute.array[idx] = originalY + Math.sin(time * 0.5 + phases[i]) * 0.5;
+            // Current positions
+            let px = positions[i3];
+            let py = positions[i3 + 1];
+            let pz = positions[i3 + 2];
+
+            // Original positions for rubber-band return
+            const ox = originalPositions[i3];
+            const oy = originalPositions[i3 + 1];
+            const oz = originalPositions[i3 + 2];
+
+            // Distance from mouse in 2D space (ignoring Z for interaction ease)
+            const dx = mouseX - px;
+            const dy = mouseY - py;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Repulsion force from mouse
+            const interactionRadius = 5;
+            if (dist < interactionRadius) {
+                const force = (interactionRadius - dist) / interactionRadius;
+                velocities[i3] -= (dx / dist) * force * 0.02;
+                velocities[i3 + 1] -= (dy / dist) * force * 0.02;
+            }
+
+            // Return force to original position
+            velocities[i3] += (ox - px) * 0.001;
+            velocities[i3 + 1] += (oy - py) * 0.001;
+            velocities[i3 + 2] += (oz - pz) * 0.001;
+
+            // Friction
+            velocities[i3] *= 0.95;
+            velocities[i3 + 1] *= 0.95;
+            velocities[i3 + 2] *= 0.95;
+
+            // Apply velocity
+            positions[i3] += velocities[i3];
+            positions[i3 + 1] += velocities[i3 + 1];
+            positions[i3 + 2] += velocities[i3 + 2];
+
+            // Update dummy instance
+            dummy.position.set(positions[i3], positions[i3 + 1], positions[i3 + 2]);
+
+            // Rotate slowly based on time
+            dummy.rotation.x = state.clock.elapsedTime * 0.2 + i;
+            dummy.rotation.y = state.clock.elapsedTime * 0.3 + i;
+
+            dummy.updateMatrix();
+            meshRef.current.setMatrixAt(i, dummy.matrix);
         }
-        posAttribute.needsUpdate = true;
-
-        // Slow rotation of entire particle field
-        meshRef.current.rotation.y = time * 0.05;
+        meshRef.current.instanceMatrix.needsUpdate = true;
     });
 
     return (
-        <points ref={meshRef}>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    count={count}
-                    array={positions}
-                    itemSize={3}
-                />
-            </bufferGeometry>
-            <pointsMaterial
-                size={0.05}
-                color="#00f0ff"
-                transparent
-                opacity={0.6}
-                blending={THREE.AdditiveBlending}
-                sizeAttenuation={true}
-            />
-        </points>
+        <instancedMesh ref={meshRef} args={[null, null, count]}>
+            <icosahedronGeometry args={[0.05, 0]} />
+            <meshBasicMaterial color="#00f0ff" transparent opacity={0.6} blending={THREE.AdditiveBlending} />
+        </instancedMesh>
     );
 };
 

@@ -104,3 +104,41 @@ button,
 input {
   cursor: none !important;
 }
+
+/* Phase 3: Cyber Glitch Hover Effect */
+.cyber-glitch-hover {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.cyber-glitch-hover:hover {
+  animation: cyber-glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: #fff;
+  text-shadow: 2px 0 #ff0055, -2px 0 #00f0ff;
+}
+
+@keyframes cyber-glitch-anim {
+  0% {
+    transform: translate(0)
+  }
+
+  20% {
+    transform: translate(-2px, 1px)
+  }
+
+  40% {
+    transform: translate(-1px, -1px)
+  }
+
+  60% {
+    transform: translate(2px, 1px)
+  }
+
+  80% {
+    transform: translate(1px, -2px)
+  }
+
+  100% {
+    transform: translate(0)
+  }
+}
