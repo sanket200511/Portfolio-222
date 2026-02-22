@@ -46,9 +46,10 @@ Open `client/src/components/ContactSection.jsx`.
 ## 4. 🔑 Admin Dashboard Passwords
 
 The Admin `/override` Dashboard allows you to manually inject Projects and Skills into the database.
-- Go to `server/.env`.
+- Go to `server/.env` (or your Render Environment Variables dashboard).
 - Change `ADMIN_USER` to your desired username.
-- For maximum security, the password is a `bcrypt` hash. If you ever deploy this, do not leave the password as the default. You can generate a new bcrypt hash online or in Javascript for `ADMIN_PASS_HASH`.
+- Change `ADMIN_PASS` to your desired plain-text password.
+- No hashing required! The backend will check for exact string matches against these variables.
 
 ---
 
