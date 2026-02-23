@@ -40,10 +40,10 @@ const ProjectNode = ({ project, onClick }) => {
             {/* Node Label via HTML Overlay - Add pointerEvents none to wrapper to prevent raycast blocking */}
             <Html position={[0, -0.8, 0]} center zIndexRange={[100, 0]} style={{ pointerEvents: 'none' }}>
                 <div
-                    className={`transition-all duration-300 font-mono text-center pointer-events-none whitespace-nowrap
-            ${hovered ? 'opacity-100 scale-110' : 'opacity-40 scale-100'}`}
+                    className={`transition-all duration-300 font-mono text-center pointer-events-none
+            ${hovered ? 'opacity-100 scale-110' : 'opacity-20 scale-100'}`}
                 >
-                    <div className="text-xs text-white bg-black/50 px-2 py-1 rounded border border-white/20 backdrop-blur-sm shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                    <div className="text-xs text-white bg-black/50 px-2 py-1 rounded border border-white/20 backdrop-blur-sm shadow-[0_0_10px_rgba(0,0,0,0.5)] max-w-[150px] whitespace-normal break-words mx-auto">
                         <span style={{ color: project.color }}>[{project.category}]</span><br />
                         {project.title}
                     </div>

@@ -1,7 +1,52 @@
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Terminal from './Terminal';
+import axios from 'axios';
 
 const AboutSection = () => {
+    const [githubStats, setGithubStats] = useState({
+        repos: 0,
+        stars: 0,
+        topLanguage: 'SCANNING...'
+    });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const userRes = await axios.get('https://api.github.com/users/sanket200511');
+                const reposRes = await axios.get('https://api.github.com/users/sanket200511/repos?per_page=100');
+
+                let totalStars = 0;
+                let langCount = {};
+
+                reposRes.data.forEach(repo => {
+                    totalStars += repo.stargazers_count;
+                    if (repo.language) {
+                        langCount[repo.language] = (langCount[repo.language] || 0) + 1;
+                    }
+                });
+
+                // Find most used language
+                let topLang = 'N/A';
+                let max = 0;
+                for (const [lang, count] of Object.entries(langCount)) {
+                    if (count > max) {
+                        max = count;
+                        topLang = lang;
+                    }
+                }
+
+                setGithubStats({
+                    repos: userRes.data.public_repos,
+                    stars: totalStars,
+                    topLanguage: topLang
+                });
+            } catch (err) {
+                console.error("Failed to parse GitHub profile metrics.");
+            }
+        };
+        fetchStats();
+    }, []);
     return (
         <section id="about" className="min-h-screen w-full bg-black relative flex items-center py-24 border-t border-white/10 z-10">
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -50,17 +95,17 @@ const AboutSection = () => {
                         transition={{ duration: 0.6, delay: 0.5 }}
                         className="mt-4 md:mt-8 flex gap-2 md:gap-4 font-mono text-xs md:text-sm"
                     >
-                        <div className="border border-white/20 p-2 md:p-4 w-full text-center bg-black/50 backdrop-blur-sm">
-                            <div className="text-primary text-xl md:text-2xl font-bold mb-1">5+</div>
-                            <div className="text-gray-500 uppercase tracking-widest text-[8px] md:text-[10px]">Projects Deployed</div>
+                        <div className="border border-[#ff0055]/30 p-2 md:p-4 w-full text-center bg-black/50 backdrop-blur-sm group hover:border-[#ff0055] transition-colors cyber-glitch-hover">
+                            <div className="text-[#ff0055] text-xl md:text-2xl font-bold mb-1">{githubStats.repos}</div>
+                            <div className="text-gray-500 uppercase tracking-widest text-[8px] md:text-[10px] group-hover:text-white">Active Constructs</div>
                         </div>
-                        <div className="border border-white/20 p-2 md:p-4 w-full text-center bg-black/50 backdrop-blur-sm">
-                            <div className="text-primary text-xl md:text-2xl font-bold mb-1">10k+</div>
-                            <div className="text-gray-500 uppercase tracking-widest text-[8px] md:text-[10px]">Lines of Code</div>
+                        <div className="border border-[#00f0ff]/30 p-2 md:p-4 w-full text-center bg-black/50 backdrop-blur-sm group hover:border-[#00f0ff] transition-colors cyber-glitch-hover">
+                            <div className="text-[#00f0ff] text-xl md:text-2xl font-bold mb-1">{githubStats.stars}</div>
+                            <div className="text-gray-500 uppercase tracking-widest text-[8px] md:text-[10px] group-hover:text-white">Total Stargazers</div>
                         </div>
-                        <div className="border border-white/20 p-2 md:p-4 w-full text-center bg-black/50 backdrop-blur-sm">
-                            <div className="text-primary text-xl md:text-2xl font-bold mb-1">24/7</div>
-                            <div className="text-gray-500 uppercase tracking-widest text-[8px] md:text-[10px]">System Uptime</div>
+                        <div className="border border-[#00ff88]/30 p-2 md:p-4 w-full text-center bg-black/50 backdrop-blur-sm group hover:border-[#00ff88] transition-colors cyber-glitch-hover">
+                            <div className="text-[#00ff88] text-xl md:text-2xl font-bold mb-1 truncate">{githubStats.topLanguage}</div>
+                            <div className="text-gray-500 uppercase tracking-widest text-[8px] md:text-[10px] group-hover:text-white">Primary Core Logic</div>
                         </div>
                     </motion.div>
                 </div>

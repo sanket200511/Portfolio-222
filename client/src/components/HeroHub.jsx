@@ -1,8 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
-import { EffectComposer, Bloom, ChromaticAberration, Noise, Glitch } from '@react-three/postprocessing';
-import { BlurPass, Resizer, KernelSize, BlendFunction } from 'postprocessing';
+
 import GridPlatform from './three/GridPlatform';
 import ParticleField from './three/ParticleField';
 import CameraController from './three/CameraController';
@@ -13,9 +12,13 @@ import axios from 'axios';
 const HeroHub = ({ onNodeClick }) => {
     const [liveProjects, setLiveProjects] = useState([]);
     const [isMobile, setIsMobile] = useState(false);
+    const [isOverridden, setIsOverridden] = useState(false);
 
     // Initial load: determine if mobile and fetch GitHub data
     useEffect(() => {
+        const handleOverride = () => setIsOverridden(true);
+        window.addEventListener('SYSTEM_OVERRIDE', handleOverride);
+
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -83,18 +86,21 @@ const HeroHub = ({ onNodeClick }) => {
 
         fetchGithubData();
 
-        return () => window.removeEventListener('resize', checkMobile);
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+            window.removeEventListener('SYSTEM_OVERRIDE', handleOverride);
+        };
     }, [isMobile]);
 
     return (
         <div id="hub" className="relative w-full h-screen bg-black overflow-hidden pt-24 md:pt-0">
             {/* HUD Overlay - Adjusted margin top to clear desktop Navbar */}
             <div className="absolute top-24 md:top-28 left-4 md:left-8 z-10 pointer-events-none mix-blend-screen w-full pr-4 text-glow-extreme">
-                <h1 className="text-white font-black text-3xl md:text-5xl lg:text-7xl tracking-tighter break-words drop-shadow-[0_0_15px_rgba(0,240,255,0.8)] uppercase">
-                    SANKET <span className="text-primary">KURVE</span>
+                <h1 className={`font-black text-3xl md:text-5xl lg:text-7xl tracking-tighter break-words uppercase ${isOverridden ? 'text-[#ffd700] drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]' : 'text-white drop-shadow-[0_0_15px_rgba(0,240,255,0.8)]'}`}>
+                    SANKET <span className={isOverridden ? 'text-white' : 'text-primary'}>KURVE</span>
                 </h1>
-                <p className="text-secondary font-mono mt-2 tracking-widest text-xs md:text-sm lg:text-base glitch-text-minor">
-                    [FULL-STACK ENGINEER] // [SYSTEM ARCHITECT]
+                <p className={`font-mono mt-2 tracking-widest text-xs md:text-sm lg:text-base glitch-text-minor ${isOverridden ? 'text-[#ffaa00]' : 'text-secondary'}`}>
+                    {isOverridden ? '[MAINFRAME OVERRIDDEN]' : '[FULL-STACK DEVELOPER] // [SYSTEM ARCHITECT]'}
                 </p>
             </div>
 
@@ -109,12 +115,12 @@ const HeroHub = ({ onNodeClick }) => {
                 <color attach="background" args={['#050508']} />
 
                 <ambientLight intensity={0.1} />
-                <directionalLight position={[10, 10, 5]} intensity={0.4} color="#00f0ff" />
-                <pointLight position={[-10, -10, -10]} intensity={0.2} color="#ff0055" />
+                <directionalLight position={[10, 10, 5]} intensity={0.4} color={isOverridden ? "#ffaa00" : "#00f0ff"} />
+                <pointLight position={[-10, -10, -10]} intensity={0.2} color={isOverridden ? "#ffffff" : "#ff0055"} />
 
                 <Suspense fallback={null}>
-                    <GridPlatform />
-                    <ParticleField />
+                    <GridPlatform isOverridden={isOverridden} />
+                    <ParticleField isOverridden={isOverridden} />
                     <DataCore />
 
                     <group position={[0, -1, 0]}>
@@ -129,27 +135,6 @@ const HeroHub = ({ onNodeClick }) => {
 
                     {!isMobile && <CameraController />}
 
-                    {/* Epic Cyberpunk Post-Processing - Removed disableNormalPass to re-enable 3D Clicks */}
-                    <EffectComposer multisampling={0}>
-                        <Bloom
-                            intensity={0.2}
-                            luminanceThreshold={0.8}
-                            luminanceSmoothing={0.9}
-                            kernelSize={KernelSize.SMALL}
-                        />
-                        <ChromaticAberration
-                            offset={[0.003, 0.003]}
-                            blendFunction={BlendFunction.NORMAL}
-                        />
-                        <Noise opacity={0.08} />
-                        {/* More aggressive glitch on Desktop */}
-                        <Glitch
-                            delay={[1.5, 5]}
-                            duration={[0.1, 0.4]}
-                            strength={[0.02, 0.1]}
-                            active
-                        />
-                    </EffectComposer>
                 </Suspense>
 
                 <OrbitControls

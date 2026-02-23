@@ -27,21 +27,21 @@ const CustomCursor = () => {
     return (
         <>
             <motion.div
-                className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[999999] mix-blend-difference"
+                className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999999]"
                 animate={{
                     x: mousePos.x - 16,
                     y: mousePos.y - 16,
-                    scale: isClicking ? 0.5 : 1
+                    scale: isClicking ? 0.8 : 1
                 }}
-                transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-                <svg viewBox="0 0 100 100" className="w-full h-full text-primary drop-shadow-[0_0_5px_rgba(0,240,255,1)]">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="10 10" />
-                    <line x1="50" y1="0" x2="50" y2="20" stroke="currentColor" strokeWidth="4" />
-                    <line x1="50" y1="80" x2="50" y2="100" stroke="currentColor" strokeWidth="4" />
-                    <line x1="0" y1="50" x2="20" y2="50" stroke="currentColor" strokeWidth="4" />
-                    <line x1="80" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="4" />
-                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#ffffff" strokeWidth="3" strokeDasharray="10 10" />
+                    <line x1="50" y1="0" x2="50" y2="20" stroke="#ffffff" strokeWidth="4" />
+                    <line x1="50" y1="80" x2="50" y2="100" stroke="#00f0ff" strokeWidth="4" />
+                    <line x1="0" y1="50" x2="20" y2="50" stroke="#00f0ff" strokeWidth="4" />
+                    <line x1="80" y1="50" x2="100" y2="50" stroke="#ffffff" strokeWidth="4" />
+                    <circle cx="50" cy="50" r="8" fill="#ff0055" />
                 </svg>
             </motion.div>
         </>

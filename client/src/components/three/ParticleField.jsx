@@ -2,7 +2,7 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const ParticleField = () => {
+const ParticleField = ({ isOverridden }) => {
     const count = 5000;
     const meshRef = useRef();
     const { size, viewport } = useThree();
@@ -96,7 +96,7 @@ const ParticleField = () => {
     return (
         <instancedMesh ref={meshRef} args={[null, null, count]}>
             <icosahedronGeometry args={[0.05, 0]} />
-            <meshBasicMaterial color="#00f0ff" transparent opacity={0.6} blending={THREE.AdditiveBlending} />
+            <meshBasicMaterial color={isOverridden ? "#ffd700" : "#00f0ff"} transparent opacity={0.6} blending={THREE.AdditiveBlending} />
         </instancedMesh>
     );
 };

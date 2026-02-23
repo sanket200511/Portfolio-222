@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Grid } from '@react-three/drei';
 import * as THREE from 'three';
 
-const GridPlatform = () => {
+const GridPlatform = ({ isOverridden }) => {
     const gridRef = useRef();
 
     useFrame((state) => {
@@ -21,10 +21,10 @@ const GridPlatform = () => {
                 args={[30, 30]}
                 cellSize={1}
                 cellThickness={1}
-                cellColor="#00f0ff"
+                cellColor={isOverridden ? "#ffaa00" : "#00f0ff"}
                 sectionSize={5}
                 sectionThickness={1.5}
-                sectionColor="#0055ff"
+                sectionColor={isOverridden ? "#ff0000" : "#0055ff"}
                 fadeDistance={25}
                 fadeStrength={1}
             />
@@ -33,7 +33,7 @@ const GridPlatform = () => {
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
                 <planeGeometry args={[30, 30]} />
                 <meshBasicMaterial
-                    color="#00f0ff"
+                    color={isOverridden ? "#ffaa00" : "#00f0ff"}
                     transparent
                     opacity={0.05}
                     blending={THREE.AdditiveBlending}
