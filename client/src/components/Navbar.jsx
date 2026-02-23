@@ -35,6 +35,13 @@ const Navbar = () => {
                     [ABOUT]
                 </a>
                 <a
+                    href="#history"
+                    onClick={(e) => scrollToSection(e, 'history')}
+                    className="hover:text-primary transition-colors cyber-glitch-hover text-gray-400 cursor-none"
+                >
+                    [HISTORY]
+                </a>
+                <a
                     href="#arsenal"
                     onClick={(e) => scrollToSection(e, 'arsenal')}
                     className="hover:text-primary transition-colors cyber-glitch-hover text-gray-400 cursor-none"

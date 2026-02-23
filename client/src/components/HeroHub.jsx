@@ -1,8 +1,8 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
-import { EffectComposer, ChromaticAberration, Glitch } from '@react-three/postprocessing';
-import { BlendFunction } from 'postprocessing';
+import { EffectComposer, Glitch } from '@react-three/postprocessing';
+
 
 import GridPlatform from './three/GridPlatform';
 import ParticleField from './three/ParticleField';
@@ -11,8 +11,10 @@ import ProjectNode from './three/ProjectNode';
 import DataCore from './three/DataCore';
 import GameOverlay from './GameOverlay';
 import axios from 'axios';
+import TextScramble from './TextScramble';
 
 const HeroHub = ({ onNodeClick }) => {
+    const [liveProjects, setLiveProjects] = useState([]);
     const [isMobile, setIsMobile] = useState(false);
     const [isOverridden, setIsOverridden] = useState(false);
 
@@ -56,11 +58,11 @@ const HeroHub = ({ onNodeClick }) => {
                     let customDesc = repo.description;
                     if (!customDesc || customDesc === 'No description provided.') {
                         const nameLower = repo.name.toLowerCase();
-                        if (nameLower.includes('shieldcall')) customDesc = 'AI-powered emergency response and threat mitigation system.';
-                        else if (nameLower.includes('citywatch')) customDesc = 'Real-time urban threat detection and AI analytics platform.';
+                        if (nameLower.includes('shieldcall')) customDesc = 'Standalone fraud detection AI algorithm analyzing voice patterns to flag and block threats.';
+                        else if (nameLower.includes('citywatch')) customDesc = 'Real-time urban crime-prevention platform managing real-time data flow for safety reporting.';
                         else if (nameLower.includes('crisisforge')) customDesc = 'Advanced disaster relief and tactical coordination matrix.';
                         else if (nameLower.includes('football')) customDesc = 'Machine learning model predicting football transfer market valuations.';
-                        else if (nameLower.includes('medical')) customDesc = 'Predictive medical diagnosis AI leveraging neural networks.';
+                        else if (nameLower.includes('medical')) customDesc = 'Predictive diagnostic AI leveraging SVM & Random Forest models on 22+ health parameters.';
                         else customDesc = 'Encrypted data node containing classified source code algorithms.';
                     }
 
@@ -100,7 +102,7 @@ const HeroHub = ({ onNodeClick }) => {
             {/* HUD Overlay - Adjusted margin top to clear desktop Navbar */}
             <div className="absolute top-24 md:top-28 left-4 md:left-8 z-10 pointer-events-none mix-blend-screen w-full pr-4 text-glow-extreme">
                 <h1 className={`font-black text-3xl md:text-5xl lg:text-7xl tracking-tighter break-words uppercase ${isOverridden ? 'text-[#ffd700] drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]' : 'text-white drop-shadow-[0_0_15px_rgba(0,240,255,0.8)]'}`}>
-                    SANKET <span className={isOverridden ? 'text-white' : 'text-primary'}>KURVE</span>
+                    <TextScramble text="SANKET" delay={0.5} duration={1.5} /> <span className={isOverridden ? 'text-white' : 'text-primary'}><TextScramble text="KURVE" delay={1.2} duration={1.5} /></span>
                 </h1>
                 <p className={`font-mono mt-2 tracking-widest text-xs md:text-sm lg:text-base glitch-text-minor ${isOverridden ? 'text-[#ffaa00]' : 'text-secondary'}`}>
                     {isOverridden ? '[MAINFRAME OVERRIDDEN]' : '[FULL-STACK DEVELOPER] // [SYSTEM ARCHITECT]'}
@@ -141,10 +143,6 @@ const HeroHub = ({ onNodeClick }) => {
                 </Suspense>
 
                 <EffectComposer multisampling={0}>
-                    <ChromaticAberration
-                        offset={[0.002, 0.002]}
-                        blendFunction={BlendFunction.NORMAL}
-                    />
                     <Glitch
                         delay={[2.5, 6]}
                         duration={[0.1, 0.3]}

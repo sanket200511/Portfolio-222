@@ -8,7 +8,7 @@
   --color-surface: rgba(255, 255, 255, 0.05);
 
   --font-mono: "Share Tech Mono", monospace;
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
 
   --animate-scan-line: scanline 8s linear infinite;
   --animate-pulse-glow: pulseglow 2s ease-in-out infinite alternate;
@@ -118,7 +118,7 @@ input {
 }
 
 .cyber-glitch-hover:hover {
-  animation: cyber-glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  animation: cyber-glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both;
   color: #fff;
   text-shadow: 2px 0 #ff0055, -2px 0 #00f0ff;
 }
@@ -129,7 +129,7 @@ input {
 }
 
 .hud-glitch-hover:hover {
-  animation: cyber-glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  animation: cyber-glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both;
   color: #fff;
   text-shadow: 2px 0 #ff0055, -2px 0 #00f0ff;
   border-color: #ff0055;

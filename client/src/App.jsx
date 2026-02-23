@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import Lenis from '@studio-freight/lenis';
 
 import BootSequence from './components/BootSequence';
 import HeroHub from './components/HeroHub';
 import Navbar from './components/Navbar';
 import ProjectModal from './components/ProjectModal';
 import AboutSection from './components/AboutSection';
+import ExperienceSection from './components/ExperienceSection';
 import SkillsArsenal from './components/SkillsArsenal';
 import ContactSection from './components/ContactSection';
 import AdminDashboard from './components/AdminDashboard';
@@ -21,11 +23,28 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
+    // Lenis Smooth Scroll Setup
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
     // Simulate boot time
     const timer = setTimeout(() => {
       setIsBooting(false);
-    }, 4000); // 4 seconds boot normally, we can adjust later based on BootSequence animation duration
-    return () => clearTimeout(timer);
+    }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+      lenis.destroy();
+    };
   }, []);
 
   return (
@@ -56,6 +75,7 @@ function App() {
                     />
 
                     <AboutSection />
+                    <ExperienceSection />
                     <SkillsArsenal />
                     <ContactSection />
                   </main>
