@@ -70,7 +70,7 @@ const ExperienceSection = () => {
                     <div className="inline-block border border-primary/30 bg-primary/10 text-primary px-3 py-1 text-xs font-mono tracking-widest mb-4">
                         // OPERATIONAL_HISTORY
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-black font-sans tracking-tighter text-white uppercase glitch-text-minor">
+                    <h2 className="text-3xl md:text-5xl leading-tight md:leading-none font-black font-sans tracking-tighter text-white uppercase glitch-text-minor break-words w-full">
                         <TextScramble text="Timeline" delay={0} duration={1.5} />{" "}
                         <span className="text-[#ff0055]"><TextScramble text="Records" delay={0.5} duration={1.5} /></span>
                     </h2>

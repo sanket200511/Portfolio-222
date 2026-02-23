@@ -69,7 +69,7 @@ const AboutSection = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-4xl md:text-6xl font-black font-sans tracking-tighter text-white mb-4 leading-tight uppercase glitch-text-minor"
+                        className="text-3xl md:text-6xl leading-tight md:leading-none font-black font-sans tracking-tighter text-white mb-4 uppercase glitch-text-minor break-words w-full"
                     >
                         <TextScramble text="Engineer by day," delay={0} duration={1.5} /> <br className="hidden md:block" />
                         <span className="text-primary"><TextScramble text="Accessing the grid" delay={0.5} duration={1.5} /></span>

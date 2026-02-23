@@ -33,7 +33,7 @@ const SkillsArsenal = () => {
                     <div className="inline-block border border-red-500/30 bg-red-500/10 text-red-400 px-3 py-1 text-xs font-mono tracking-widest mb-4">
             // WEAPONS_CACHE_FOUND
                     </div>
-                    <h2 className="text-4xl md:text-6xl font-black font-sans tracking-tighter text-white uppercase mb-2 md:mb-4 glitch-text-minor">
+                    <h2 className="text-3xl md:text-6xl leading-tight md:leading-none font-black font-sans tracking-tighter text-white uppercase mb-2 md:mb-4 glitch-text-minor break-words w-full">
                         <TextScramble text="The Arsenal" delay={0} duration={1.5} />
                     </h2>
                     <p className="text-gray-400 font-mono text-xs md:text-sm max-w-xl">

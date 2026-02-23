@@ -31,7 +31,7 @@ const ProjectModal = ({ project, onClose }) => {
                                 <p className="font-mono text-xs tracking-[0.2em] mb-2 opacity-50">
                                     FILE :: {project.id}.dat
                                 </p>
-                                <h2 className="text-3xl md:text-5xl font-sans font-bold text-white tracking-tight" style={{ textShadow: `0 0 20px ${project.color}50` }}>
+                                <h2 className="text-3xl md:text-5xl font-sans font-bold text-white tracking-tight break-words w-full pr-4" style={{ textShadow: `0 0 20px ${project.color}50` }}>
                                     {project.title}
                                 </h2>
                                 <div className="inline-block mt-3 px-3 py-1 bg-black/50 font-mono text-xs border border-white/10 text-white rounded">
@@ -71,7 +71,7 @@ const ProjectModal = ({ project, onClose }) => {
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-800">
+                        <div className="flex flex-wrap items-center gap-4 mt-8 pt-6 border-t border-gray-800">
                             <a
                                 href={project.githubUrl || 'https://github.com/sanket200511'}
                                 target="_blank"

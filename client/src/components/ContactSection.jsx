@@ -19,7 +19,7 @@ const ContactSection = () => {
                     transition={{ duration: 0.8 }}
                     className="text-center"
                 >
-                    <h2 className="text-4xl md:text-6xl font-black font-sans text-white uppercase tracking-tighter mb-4 glitch-text-minor">
+                    <h2 className="text-3xl md:text-6xl leading-tight md:leading-none font-black font-sans text-white uppercase tracking-tighter mb-4 glitch-text-minor break-words">
                         <TextScramble text="Establish Connection" delay={0} duration={1.5} />
                     </h2>
                     <p className="text-gray-400 font-mono text-xs md:text-sm mb-8 md:mb-12 max-w-2xl mx-auto px-4 md:px-0">

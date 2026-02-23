@@ -19,7 +19,7 @@ const Navbar = () => {
                 <span className="text-primary">GRID</span>//ACCESS
             </div>
 
-            <div className="flex gap-6 font-mono text-xs tracking-[0.2em]">
+            <div className="flex flex-wrap justify-center gap-3 md:gap-6 font-mono text-[10px] md:text-xs tracking-widest w-full md:w-auto mt-2 md:mt-0">
                 <a
                     href="#hub"
                     onClick={(e) => scrollToSection(e, 'hub')}

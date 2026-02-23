@@ -104,7 +104,7 @@ const HeroHub = ({ onNodeClick }) => {
                 <h1 className={`font-black text-3xl md:text-5xl lg:text-7xl tracking-tighter break-words uppercase ${isOverridden ? 'text-[#ffd700] drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]' : 'text-white drop-shadow-[0_0_15px_rgba(0,240,255,0.8)]'}`}>
                     <TextScramble text="SANKET" delay={0.5} duration={1.5} /> <span className={isOverridden ? 'text-white' : 'text-primary'}><TextScramble text="KURVE" delay={1.2} duration={1.5} /></span>
                 </h1>
-                <p className={`font-mono mt-2 tracking-widest text-xs md:text-sm lg:text-base glitch-text-minor ${isOverridden ? 'text-[#ffaa00]' : 'text-secondary'}`}>
+                <p className={`font-mono mt-2 tracking-widest text-[9px] md:text-sm lg:text-base break-words w-full glitch-text-minor ${isOverridden ? 'text-[#ffaa00]' : 'text-secondary'}`}>
                     {isOverridden ? '[MAINFRAME OVERRIDDEN]' : '[FULL-STACK DEVELOPER] // [SYSTEM ARCHITECT]'}
                 </p>
             </div>
