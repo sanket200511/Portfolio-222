@@ -1,0 +1,216 @@
+diff --git a/client/src/App.jsx b/client/src/App.jsx
+index 749d16a..2d11095 100644
+--- a/client/src/App.jsx
++++ b/client/src/App.jsx
+@@ -14,7 +14,6 @@ import CustomCursor from './components/CustomCursor';
+ import MatrixOverlay from './components/MatrixOverlay';
+ import RedAlertOverlay from './components/RedAlertOverlay';
+ import MeltdownModal from './components/MeltdownModal';
+-import GameOverlay from './components/GameOverlay';
+ 
+ function App() {
+   const [isBooting, setIsBooting] = useState(true);
+@@ -35,7 +34,6 @@ function App() {
+       <MatrixOverlay />
+       <RedAlertOverlay />
+       <MeltdownModal />
+-      <GameOverlay />
+       {/* Global Scanline Effect */}
+       <div className="pointer-events-none fixed inset-0 z-50 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20"></div>
+ 
+diff --git a/client/src/components/GameOverlay.jsx b/client/src/components/GameOverlay.jsx
+index 078ebc4..ae416fd 100644
+--- a/client/src/components/GameOverlay.jsx
++++ b/client/src/components/GameOverlay.jsx
+@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
+ export let gameStats = {
+     hashes: 0,
+     miners: 0,
+-    unlocked: false,
++    unlocked: true,
+     overridden: false
+ };
+ 
+@@ -13,6 +13,7 @@ const GameOverlay = () => {
+     const [hashes, setHashes] = useState(gameStats.hashes);
+     const [miners, setMiners] = useState(gameStats.miners);
+     const [unlocked, setUnlocked] = useState(gameStats.unlocked);
++    const [overridden, setOverridden] = useState(gameStats.overridden);
+ 
+     useEffect(() => {
+         const handleAddHash = (e) => {
+@@ -25,6 +26,8 @@ const GameOverlay = () => {
+             }
+         };
+ 
++        const handleOverride = () => setOverridden(true);
++
+         const handleBuyMiner = () => {
+             const cost = 10 * Math.pow(2, gameStats.miners);
+             if (gameStats.hashes >= cost) {
+@@ -46,11 +49,13 @@ const GameOverlay = () => {
+ 
+         window.addEventListener('ADD_HASH', handleAddHash);
+         window.addEventListener('BUY_MINER', handleBuyMiner);
++        window.addEventListener('SYSTEM_OVERRIDE', handleOverride);
+         const interval = setInterval(handleAutoMine, 1000);
+ 
+         return () => {
+             window.removeEventListener('ADD_HASH', handleAddHash);
+             window.removeEventListener('BUY_MINER', handleBuyMiner);
++            window.removeEventListener('SYSTEM_OVERRIDE', handleOverride);
+             clearInterval(interval);
+         };
+     }, []);
+@@ -63,40 +68,51 @@ const GameOverlay = () => {
+             gameStats.hashes -= overrideCost;
+             gameStats.overridden = true;
+             setHashes(gameStats.hashes);
++            setOverridden(true);
+             window.dispatchEvent(new CustomEvent('SYSTEM_OVERRIDE'));
+         }
+     };
+ 
+     return (
+         <AnimatePresence>
+-            {unlocked && (
++            {unlocked && !overridden && (
+                 <motion.div
+                     initial={{ opacity: 0, scale: 0.9 }}
+                     animate={{ opacity: 1, scale: 1 }}
+-                    className="z-[99999] bg-black/80 backdrop-blur-md border border-[#00f0ff]/50 p-4 font-mono w-64 cyber-glitch-hover"
+-                    style={{ position: 'fixed', right: '32px', bottom: '32px' }}
++                    exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.3 } }}
++                    className="absolute z-[100] bg-black/60 backdrop-blur-md border border-[#00f0ff]/40 p-5 font-mono hud-glitch-hover box-border shadow-[0_0_20px_rgba(0,240,255,0.1)]"
++                    style={{ right: '2.5rem', bottom: '2.5rem', width: '260px' }}
+                 >
+-                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Sentinel Core Uplink</div>
+-                    <div className="text-3xl font-black text-[#00f0ff] mb-1">{Math.floor(hashes).toLocaleString()}</div>
+-                    <div className="text-[10px] text-[#00f0ff]/70 mb-4">Cryptographic Hashes</div>
++                    <button
++                        onClick={() => {
++                            gameStats.unlocked = false;
++                            setUnlocked(false);
++                        }}
++                        className="absolute top-2 right-2 text-gray-500 hover:text-[#ff0055] font-bold p-1 text-sm cursor-none transition-colors"
++                    >
++                        [X]
++                    </button>
++                    <div className="text-[10px] text-gray-400 uppercase tracking-widest mb-1.5 pr-6 line-clamp-1">Core Uplink</div>
++                    <div className="text-4xl font-black text-[#00f0ff] mb-1 leading-none drop-shadow-[0_0_5px_rgba(0,240,255,0.8)]">{Math.floor(hashes).toLocaleString()}</div>
++                    <div className="text-[10px] text-[#00f0ff]/80 mb-4 tracking-wide">Cryptographic Hashes</div>
+ 
+                     <div className="space-y-3">
+                         <button
+                             onClick={() => window.dispatchEvent(new CustomEvent('BUY_MINER'))}
+                             disabled={hashes < minerCost}
+-                            className={`w-full text-left p-2 border transition-all ${hashes >= minerCost ? 'border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00] hover:text-black cursor-none' : 'border-gray-800 text-gray-600 cursor-none'}`}
++                            className={`w-full text-left p-2 border transition-all ${hashes >= minerCost ? 'border-[#ffaa00]/70 text-[#ffaa00] hover:bg-[#ffaa00] hover:text-black cursor-none' : 'border-gray-800/60 text-gray-600 cursor-none'}`}
+                         >
+-                            <div className="text-sm font-bold">Deploy Auto-Miner</div>
+-                            <div className="text-[10px] mt-1">Cost: {minerCost} | Owned: {miners}</div>
++                            <div className="text-sm font-bold leading-tight">Auto-Miner</div>
++                            <div className="text-[10px] mt-1 text-gray-400">Cost: {minerCost} | Owned: {miners}</div>
+                         </button>
+ 
+                         <button
+                             onClick={triggerOverride}
+                             disabled={hashes < overrideCost}
+-                            className={`w-full p-2 border text-center font-black tracking-widest transition-all ${hashes >= overrideCost ? 'border-[#ff0055] text-[#ff0055] bg-red-900/20 hover:bg-[#ff0055] hover:text-black animate-pulse cursor-none' : 'border-gray-800 text-gray-800 cursor-none'}`}
++                            className={`w-full p-2 border text-center font-black tracking-widest transition-all ${hashes >= overrideCost ? 'border-[#ff0055]/80 text-[#ff0055] bg-red-900/10 hover:bg-[#ff0055] hover:text-black animate-pulse cursor-none' : 'border-gray-800/60 text-gray-800 cursor-none'}`}
+                         >
+-                            OVERRIDE MAINFRAME
+-                            <div className="text-[8px] font-normal mt-1">Cost: {overrideCost.toLocaleString()}</div>
++                            <div className="text-xs leading-tight">OVERRIDE</div>
++                            <div className="text-[9px] font-normal mt-1 opacity-70">Cost: {(overrideCost / 1000).toFixed(0)}k</div>
+                         </button>
+                     </div>
+                 </motion.div>
+diff --git a/client/src/components/HeroHub.jsx b/client/src/components/HeroHub.jsx
+index c85c2a6..d74a3d9 100644
+--- a/client/src/components/HeroHub.jsx
++++ b/client/src/components/HeroHub.jsx
+@@ -1,12 +1,15 @@
+ import React, { Suspense, useEffect, useState } from 'react';
+ import { Canvas } from '@react-three/fiber';
+ import { OrbitControls, Stars } from '@react-three/drei';
++import { EffectComposer, Bloom, ChromaticAberration, Glitch } from '@react-three/postprocessing';
++import { BlendFunction, KernelSize } from 'postprocessing';
+ 
+ import GridPlatform from './three/GridPlatform';
+ import ParticleField from './three/ParticleField';
+ import CameraController from './three/CameraController';
+ import ProjectNode from './three/ProjectNode';
+ import DataCore from './three/DataCore';
++import GameOverlay from './GameOverlay';
+ import axios from 'axios';
+ 
+ const HeroHub = ({ onNodeClick }) => {
+@@ -112,7 +115,7 @@ const HeroHub = ({ onNodeClick }) => {
+                 }}
+                 gl={{ antialias: true, alpha: false }}
+             >
+-                <color attach="background" args={['#050508']} />
++                <color attach="background" args={['#000000']} />
+ 
+                 <ambientLight intensity={0.1} />
+                 <directionalLight position={[10, 10, 5]} intensity={0.4} color={isOverridden ? "#ffaa00" : "#00f0ff"} />
+@@ -137,6 +140,25 @@ const HeroHub = ({ onNodeClick }) => {
+ 
+                 </Suspense>
+ 
++                <EffectComposer multisampling={0}>
++                    <Bloom
++                        intensity={0.15}
++                        luminanceThreshold={0.8}
++                        luminanceSmoothing={0.9}
++                        kernelSize={KernelSize.SMALL}
++                    />
++                    <ChromaticAberration
++                        offset={[0.002, 0.002]}
++                        blendFunction={BlendFunction.NORMAL}
++                    />
++                    <Glitch
++                        delay={[2.5, 6]}
++                        duration={[0.1, 0.3]}
++                        strength={[0.01, 0.04]}
++                        active
++                    />
++                </EffectComposer>
++
+                 <OrbitControls
+                     enablePan={false}
+                     enableZoom={!isMobile} // Disable zoom on mobile to prevent scrolling issues
+@@ -146,6 +168,8 @@ const HeroHub = ({ onNodeClick }) => {
+                 />
+             </Canvas>
+ 
++            <GameOverlay />
++
+             {/* Scroll indicator */}
+             <div
+                 className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-10 font-mono text-gray-500 animate-bounce cursor-pointer flex flex-col items-center"
+diff --git a/client/src/index.css b/client/src/index.css
+index 7c103d5..efa474f 100644
+--- a/client/src/index.css
++++ b/client/src/index.css
+@@ -123,6 +123,19 @@ input {
+   text-shadow: 2px 0 #ff0055, -2px 0 #00f0ff;
+ }
+ 
++/* Phase 9: HUD Glitch Hover (Positioning Safe) */
++.hud-glitch-hover {
++  transition: all 0.2s ease;
++}
++
++.hud-glitch-hover:hover {
++  animation: cyber-glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
++  color: #fff;
++  text-shadow: 2px 0 #ff0055, -2px 0 #00f0ff;
++  border-color: #ff0055;
++  box-shadow: inset 0 0 10px rgba(255, 0, 85, 0.5);
++}
++
+ @keyframes cyber-glitch-anim {
+   0% {
+     transform: translate(0)

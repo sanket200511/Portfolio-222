@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export let gameStats = {
     hashes: 0,
     miners: 0,
-    unlocked: false,
+    unlocked: true,
     overridden: false
 };
 
@@ -13,6 +13,7 @@ const GameOverlay = () => {
     const [hashes, setHashes] = useState(gameStats.hashes);
     const [miners, setMiners] = useState(gameStats.miners);
     const [unlocked, setUnlocked] = useState(gameStats.unlocked);
+    const [overridden, setOverridden] = useState(gameStats.overridden);
 
     useEffect(() => {
         const handleAddHash = (e) => {
@@ -24,6 +25,8 @@ const GameOverlay = () => {
                 setUnlocked(true);
             }
         };
+
+        const handleOverride = () => setOverridden(true);
 
         const handleBuyMiner = () => {
             const cost = 10 * Math.pow(2, gameStats.miners);
@@ -46,11 +49,13 @@ const GameOverlay = () => {
 
         window.addEventListener('ADD_HASH', handleAddHash);
         window.addEventListener('BUY_MINER', handleBuyMiner);
+        window.addEventListener('SYSTEM_OVERRIDE', handleOverride);
         const interval = setInterval(handleAutoMine, 1000);
 
         return () => {
             window.removeEventListener('ADD_HASH', handleAddHash);
             window.removeEventListener('BUY_MINER', handleBuyMiner);
+            window.removeEventListener('SYSTEM_OVERRIDE', handleOverride);
             clearInterval(interval);
         };
     }, []);
@@ -63,40 +68,51 @@ const GameOverlay = () => {
             gameStats.hashes -= overrideCost;
             gameStats.overridden = true;
             setHashes(gameStats.hashes);
+            setOverridden(true);
             window.dispatchEvent(new CustomEvent('SYSTEM_OVERRIDE'));
         }
     };
 
     return (
         <AnimatePresence>
-            {unlocked && (
+            {unlocked && !overridden && (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="z-[99999] bg-black/80 backdrop-blur-md border border-[#00f0ff]/50 p-4 font-mono w-64 cyber-glitch-hover"
-                    style={{ position: 'fixed', right: '32px', bottom: '32px' }}
+                    exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.3 } }}
+                    className="absolute z-[100] bg-black/60 backdrop-blur-md border border-[#00f0ff]/40 p-5 font-mono hud-glitch-hover box-border shadow-[0_0_20px_rgba(0,240,255,0.1)]"
+                    style={{ right: '2.5rem', bottom: '2.5rem', width: '260px' }}
                 >
-                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Sentinel Core Uplink</div>
-                    <div className="text-3xl font-black text-[#00f0ff] mb-1">{Math.floor(hashes).toLocaleString()}</div>
-                    <div className="text-[10px] text-[#00f0ff]/70 mb-4">Cryptographic Hashes</div>
+                    <button
+                        onClick={() => {
+                            gameStats.unlocked = false;
+                            setUnlocked(false);
+                        }}
+                        className="absolute top-2 right-2 text-gray-500 hover:text-[#ff0055] font-bold p-1 text-sm cursor-none transition-colors"
+                    >
+                        [X]
+                    </button>
+                    <div className="text-[10px] text-gray-400 uppercase tracking-widest mb-1.5 pr-6 line-clamp-1">Core Uplink</div>
+                    <div className="text-4xl font-black text-[#00f0ff] mb-1 leading-none drop-shadow-[0_0_5px_rgba(0,240,255,0.8)]">{Math.floor(hashes).toLocaleString()}</div>
+                    <div className="text-[10px] text-[#00f0ff]/80 mb-4 tracking-wide">Cryptographic Hashes</div>
 
                     <div className="space-y-3">
                         <button
                             onClick={() => window.dispatchEvent(new CustomEvent('BUY_MINER'))}
                             disabled={hashes < minerCost}
-                            className={`w-full text-left p-2 border transition-all ${hashes >= minerCost ? 'border-[#ffaa00] text-[#ffaa00] hover:bg-[#ffaa00] hover:text-black cursor-none' : 'border-gray-800 text-gray-600 cursor-none'}`}
+                            className={`w-full text-left p-2 border transition-all ${hashes >= minerCost ? 'border-[#ffaa00]/70 text-[#ffaa00] hover:bg-[#ffaa00] hover:text-black cursor-none' : 'border-gray-800/60 text-gray-600 cursor-none'}`}
                         >
-                            <div className="text-sm font-bold">Deploy Auto-Miner</div>
-                            <div className="text-[10px] mt-1">Cost: {minerCost} | Owned: {miners}</div>
+                            <div className="text-sm font-bold leading-tight">Auto-Miner</div>
+                            <div className="text-[10px] mt-1 text-gray-400">Cost: {minerCost} | Owned: {miners}</div>
                         </button>
 
                         <button
                             onClick={triggerOverride}
                             disabled={hashes < overrideCost}
-                            className={`w-full p-2 border text-center font-black tracking-widest transition-all ${hashes >= overrideCost ? 'border-[#ff0055] text-[#ff0055] bg-red-900/20 hover:bg-[#ff0055] hover:text-black animate-pulse cursor-none' : 'border-gray-800 text-gray-800 cursor-none'}`}
+                            className={`w-full p-2 border text-center font-black tracking-widest transition-all ${hashes >= overrideCost ? 'border-[#ff0055]/80 text-[#ff0055] bg-red-900/10 hover:bg-[#ff0055] hover:text-black animate-pulse cursor-none' : 'border-gray-800/60 text-gray-800 cursor-none'}`}
                         >
-                            OVERRIDE MAINFRAME
-                            <div className="text-[8px] font-normal mt-1">Cost: {overrideCost.toLocaleString()}</div>
+                            <div className="text-xs leading-tight">OVERRIDE</div>
+                            <div className="text-[9px] font-normal mt-1 opacity-70">Cost: {(overrideCost / 1000).toFixed(0)}k</div>
                         </button>
                     </div>
                 </motion.div>

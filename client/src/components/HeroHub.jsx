@@ -1,16 +1,18 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
+import { EffectComposer, ChromaticAberration, Glitch } from '@react-three/postprocessing';
+import { BlendFunction } from 'postprocessing';
 
 import GridPlatform from './three/GridPlatform';
 import ParticleField from './three/ParticleField';
 import CameraController from './three/CameraController';
 import ProjectNode from './three/ProjectNode';
 import DataCore from './three/DataCore';
+import GameOverlay from './GameOverlay';
 import axios from 'axios';
 
 const HeroHub = ({ onNodeClick }) => {
-    const [liveProjects, setLiveProjects] = useState([]);
     const [isMobile, setIsMobile] = useState(false);
     const [isOverridden, setIsOverridden] = useState(false);
 
@@ -93,7 +95,8 @@ const HeroHub = ({ onNodeClick }) => {
     }, [isMobile]);
 
     return (
-        <div id="hub" className="relative w-full h-screen bg-black overflow-hidden pt-24 md:pt-0">
+        <div id="hub" className="relative w-full h-screen bg-[#050508] overflow-hidden pt-24 md:pt-0">
+
             {/* HUD Overlay - Adjusted margin top to clear desktop Navbar */}
             <div className="absolute top-24 md:top-28 left-4 md:left-8 z-10 pointer-events-none mix-blend-screen w-full pr-4 text-glow-extreme">
                 <h1 className={`font-black text-3xl md:text-5xl lg:text-7xl tracking-tighter break-words uppercase ${isOverridden ? 'text-[#ffd700] drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]' : 'text-white drop-shadow-[0_0_15px_rgba(0,240,255,0.8)]'}`}>
@@ -137,6 +140,19 @@ const HeroHub = ({ onNodeClick }) => {
 
                 </Suspense>
 
+                <EffectComposer multisampling={0}>
+                    <ChromaticAberration
+                        offset={[0.002, 0.002]}
+                        blendFunction={BlendFunction.NORMAL}
+                    />
+                    <Glitch
+                        delay={[2.5, 6]}
+                        duration={[0.1, 0.3]}
+                        strength={[0.01, 0.04]}
+                        active
+                    />
+                </EffectComposer>
+
                 <OrbitControls
                     enablePan={false}
                     enableZoom={!isMobile} // Disable zoom on mobile to prevent scrolling issues
@@ -145,6 +161,8 @@ const HeroHub = ({ onNodeClick }) => {
                     maxPolarAngle={Math.PI / 2 - 0.1} // Prevent looking completely from below
                 />
             </Canvas>
+
+            <GameOverlay />
 
             {/* Scroll indicator */}
             <div
